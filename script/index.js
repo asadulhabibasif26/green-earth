@@ -1,44 +1,29 @@
 const loadCategory = () => {
   fetch("https://openapi.programming-hero.com/api/categories")
     .then((res) => res.json())
-    .then((data) => displayCategory(data.categories));
+    .then((data) => displayCategory(data.categories)
+    );
 };
 // const activeRemove =
 const displayCategory = (cets) => {
+  const categoriesContainer = document.getElementById("category-title");
   cets.forEach((cet) => {
     const categoriesTitle = cet.category_name;
-    const categoriesContainer = document.getElementById("category-title");
-
     const newElement = document.createElement("div");
-    newElement.innerHTML = `<p id="active-btn" class="btn bg-transparent  border-none  hover:bg-[#15803D]">${categoriesTitle}</P>`;
+    newElement.innerHTML = `<p onclick="getCategory(${cet.id})" class="btn bg-transparent  border-none  hover:bg-[#15803D]">${categoriesTitle}</P>`;
     categoriesContainer.append(newElement);
-
-    document.getElementById("active-btn").addEventListener("click", () => {
-      const activeBtn = document.querySelectorAll("active-btn");
-      active;
-    });
   });
 };
-loadCategory();
-
-// {
-//     "id": 1,
-//     "image": "https://i.ibb.co.com/cSQdg7tf/mango-min.jpg",
-//     "name": "Mango Tree",
-//     "description": "A fast-growing tropical tree that produces delicious, juicy mangoes during summer. Its dense green canopy offers shade, while its sweet fruits are rich in vitamins and minerals.",
-//     "category": "Fruit Tree",
-//     "price": 500
-// }
-
 const loadCard = () => {
   fetch(`https://openapi.programming-hero.com/api/plants`)
     .then((res) => res.json())
     .then((data) => displayCard(data.plants));
 };
 const displayCard = (cards) => {
+  const cardContainer = document.getElementById("card-container");
+  cardContainer.innerHTML ="";
   cards.forEach((card) => {
-    const cardContainer = document.getElementById("card-container");
-  const newCard = document.createElement("div");
+    const newCard = document.createElement("div");
   newCard.innerHTML = `
     <div class="shadow-xl p-5 space-y-2 min-h-[430px] w-[343px] rounded-xl bg-white">
         <div class="">
@@ -57,3 +42,11 @@ const displayCard = (cards) => {
   })
 };
 loadCard();
+
+loadCategory();
+const getCategory = (id) =>{
+  const url = `https://openapi.programming-hero.com/api/category/${id}`
+  fetch(url)
+  .then((res) => res.json())
+  .then((data) => displayCard(data.plants));
+}
