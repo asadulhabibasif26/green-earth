@@ -3,6 +3,16 @@ const loadCategory = () => {
     .then((res) => res.json())
     .then((data) => displayCategory(data.categories));
 };
+const manageLoading = (status) => {
+  if(status == true){
+    document.getElementById('loading-fun').classList.remove('hidden');
+    document.getElementById('card-container').classList.add('hidden');
+  }
+  else{
+    document.getElementById('card-container').classList.remove('hidden');
+    document.getElementById('loading-fun').classList.add('hidden');
+  }
+}
 // const activeRemove =
 const displayCategory = (cets) => {
   const categoriesContainer = document.getElementById("category-title");
@@ -28,6 +38,7 @@ const loadCard = (id) => {
     .then((data) => displayCard(data.plants));
 };
 const displayCard = (cards) => {
+  manageLoading(true);
   const cardContainer = document.getElementById("card-container");
   cardContainer.innerHTML = "";
   cards.forEach((card) => {
@@ -46,6 +57,7 @@ const displayCard = (cards) => {
         <button onclick="addToCard(${card.id})" class="bg-[#15803D] btn text-white w-full rounded-full">Add to Cart</button>
     </div>
     `;
+    manageLoading(false);
     cardContainer.append(newCard);
   });
 };
@@ -63,17 +75,33 @@ const displayAddToCard = (data) => {
   const addToCardContainer = document.getElementById("add-to-card-container");
   const newAdd = document.createElement('div');
   newAdd.innerHTML =`
-  <div class="flex justify-between bg-[#F0FDF4] p-3 rounded-lg">     
+  <div id="add-to-card-${data.id}" class="flex justify-between bg-[#F0FDF4] p-3 rounded-lg">     
   <div>
     <h1 class="font-bold">${data.name}</h1>
     <p><i class="fa-solid fa-bangladeshi-taka-sign"></i>${data.price} x 1</p>
     </div>
-      <button><i class="fa-solid fa-xmark"></i></button>
+      <button onclick="cardDeleteBtn(${data.price} ,${data.id} )" id="" class="btn cart-delete-btn rounded-full hover:bg-red-400">x</button>
   </div>
   `
-
+  addToCardTotalPrice(data.price)
   addToCardContainer.append(newAdd); 
 };
+const addToCardTotalPrice = (price) => {
+  const totalPriceContainer = document.getElementById('total-price');
+  const totalPrice = parseInt(document.getElementById('total-price').innerText);
+  const newTotalPrice = totalPrice + price;
+  totalPriceContainer.innerText = newTotalPrice ;
+}
+const cardDeleteBtn = (price , id) => {
+  const totalPriceContainer = document.getElementById('total-price');
+  const totalPrice = parseInt(document.getElementById('total-price').innerText);
+  const newTotalPrice = totalPrice - price;
+  totalPriceContainer.innerText = newTotalPrice ;
+  const deleteThis = document.getElementById(`add-to-card-${id}`)
+  deleteThis.parentElement.remove();
+  
+
+}
 
 const mortalLoad = (id) => {
   const url = `https://openapi.programming-hero.com/api/plant/${id}`;
@@ -108,3 +136,7 @@ const displayModal =  (data) => {
 
   document.getElementById('card_modal').showModal();
 }
+
+
+
+
