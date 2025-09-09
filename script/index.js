@@ -37,7 +37,7 @@ const displayCard = (cards) => {
         <div class="">
             <img class="h-[186px] w-[100%] object-cover rounded-xl" src="${card.image}" alt="">
         </div>
-        <h1 class="text-xl font-bold">${card.name}</h1>
+        <h1 onclick="mortalLoad(${card.id})" class="text-xl font-bold">${card.name}</h1>
         <p>${card.description}</p>
         <div class="flex justify-between items-center">
             <button class="btn rounded-full text-green-400 bg-green-100">${card.category}</button>
@@ -74,3 +74,37 @@ const displayAddToCard = (data) => {
 
   addToCardContainer.append(newAdd); 
 };
+
+const mortalLoad = (id) => {
+  const url = `https://openapi.programming-hero.com/api/plant/${id}`;
+
+  fetch(url)
+  .then((res) => res.json())
+  .then((data) => displayModal(data.plants));
+}
+
+const displayModal =  (data) => {
+  const modalContainer = document.getElementById('modal-container');
+  modalContainer.innerHTML ="";
+  const createElement = document.createElement('div');
+  createElement.innerHTML = `
+    <div class="space-y-2">
+      <img class="h-52 w-[100%] object-cover" src="${data.image}" alt="">
+      <h1 class="text-xl font-bold">${data.name}</h1>
+      <p>${data.description}</p>
+      <div class="flex justify-between items-center">
+            <button class="btn rounded-full text-green-400 bg-green-100">${data.category}</button>
+            <h2 class="font-semibold"><i class="fa-solid fa-bangladeshi-taka-sign"></i>${data.price}</h2>
+      </div>
+      <button onclick="addToCard(${data.id})" class="bg-[#15803D] btn text-white w-full rounded-full">Add to Cart</button>
+    </div>
+    <div class="modal-action">
+      <form method="dialog">
+        <!-- if there is a button in form, it will close the modal -->
+        <button class="btn">Close</button>
+      </form>
+  `
+  modalContainer.append(createElement);
+
+  document.getElementById('card_modal').showModal();
+}
