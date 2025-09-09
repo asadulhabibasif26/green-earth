@@ -4,20 +4,40 @@ const loadCategory = () => {
     .then((data) => displayCategory(data.categories)
     );
 };
+const activeRemove = () => {
+  const categoryBtn = document.querySelectorAll('.category-btn');
+  categoryBtn.forEach((btn) => btn.classList.remove('active') );
+}
 // const activeRemove =
 const displayCategory = (cets) => {
   const categoriesContainer = document.getElementById("category-title");
   cets.forEach((cet) => {
     const categoriesTitle = cet.category_name;
+    const categoriesId = cet.id;
     const newElement = document.createElement("div");
-    newElement.innerHTML = `<p onclick="getCategory(${cet.id})" class="btn bg-transparent  border-none  hover:bg-[#15803D]">${categoriesTitle}</P>`;
+    newElement.innerHTML = `<p id="title-no-${cet.id}" onclick="getCategoryCard(${categoriesId})" class="category-btn active btn bg-transparent  border-none  hover:bg-[#15803D] w-[100%] justify-start ">${categoriesTitle}</P>`;
     categoriesContainer.append(newElement);
   });
 };
-const loadCard = () => {
+loadCategory();
+const getCategoryCard = (id) =>{
+  const url = `https://openapi.programming-hero.com/api/category/${id}`
+  fetch(url)
+  .then((res) => res.json())
+  .then((data) => displayCard(data.plants));
+  loadCard(id);
+}
+
+
+const loadCard = (id) => {
   fetch(`https://openapi.programming-hero.com/api/plants`)
     .then((res) => res.json())
-    .then((data) => displayCard(data.plants));
+    .then((data) => {
+      activeRemove();
+      displayCard(data.plants)
+      const clickBtn = document.getElementById(`title-no-${id}`);
+      clickBtn.classList.add('active');
+    });
 };
 const displayCard = (cards) => {
   const cardContainer = document.getElementById("card-container");
@@ -43,10 +63,3 @@ const displayCard = (cards) => {
 };
 loadCard();
 
-loadCategory();
-const getCategory = (id) =>{
-  const url = `https://openapi.programming-hero.com/api/category/${id}`
-  fetch(url)
-  .then((res) => res.json())
-  .then((data) => displayCard(data.plants));
-}
