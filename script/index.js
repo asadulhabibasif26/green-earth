@@ -3,12 +3,11 @@ const loadCategory = () => {
     .then((res) => res.json())
     .then((data) => displayCategory(data.categories));
 };
-const manageLoading = (status) => {
+const loadManage = (status) => {
   if(status == true){
     document.getElementById('loading-fun').classList.remove('hidden');
     document.getElementById('card-container').classList.add('hidden');
-  }
-  else{
+  }else{
     document.getElementById('card-container').classList.remove('hidden');
     document.getElementById('loading-fun').classList.add('hidden');
   }
@@ -26,6 +25,7 @@ const displayCategory = (cets) => {
 };
 loadCategory();
 const getCategoryCard = (id) => {
+  loadManage(true);
   const url = `https://openapi.programming-hero.com/api/category/${id}`;
   fetch(url)
     .then((res) => res.json())
@@ -33,12 +33,12 @@ const getCategoryCard = (id) => {
   loadCard(id);
 };
 const loadCard = (id) => {
+   loadManage(true);
   fetch(`https://openapi.programming-hero.com/api/plants`)
     .then((res) => res.json())
     .then((data) => displayCard(data.plants));
 };
 const displayCard = (cards) => {
-  manageLoading(true);
   const cardContainer = document.getElementById("card-container");
   cardContainer.innerHTML = "";
   cards.forEach((card) => {
@@ -57,7 +57,7 @@ const displayCard = (cards) => {
         <button onclick="addToCard(${card.id})" class="bg-[#15803D] btn text-white w-full rounded-full">Add to Cart</button>
     </div>
     `;
-    manageLoading(false);
+    loadManage(false);
     cardContainer.append(newCard);
   });
 };
